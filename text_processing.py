@@ -1,5 +1,6 @@
-# modified code from ChatGPT (4o, paid version, November 26, 2024)
-import torch
+# modified code from ChatGPT (4o, paid version, November 26, 2024 and December 9th 2024)
+import torch, json
+import nltk
 from transformers import (
     GPT2Tokenizer,
     GPT2LMHeadModel,
@@ -9,12 +10,10 @@ from transformers import (
 )
 from datasets import load_dataset
 
+nltk.download("punkt_tab")
+
 MODEL_NAME = "gpt2"
 OUTPUT_DIR = "model_output"
-
-# Load the data (with my writing)
-file_paths = ["writing_samples.jsonl", "sample_text.jsonl"]
-dataset = load_dataset("json", data_files=file_paths)
 
 # Loads pre-trained model of GPT2
 tokenizer = GPT2Tokenizer.from_pretrained(MODEL_NAME)
@@ -22,11 +21,37 @@ tokenizer = GPT2Tokenizer.from_pretrained(MODEL_NAME)
 if tokenizer.pad_token is None:
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
 
-# Tokenize the dataset (reformat into a format the model can use)
-def tokenize_function(examples):
-    return tokenizer(examples["text"], truncation=False, padding=True)
+"""
+This function splits the object into sentences so it can be properly processed by the model.
+"""
+def split_story_into_sentences(story_text):
+    sentences = nltk.sent_tokenize(story_text)  # Split the text into sentences
+    return sentences  # Return a list of sentences
 
-tokenized_dataset = dataset.map(tokenize_function, batched=True)
+# Read the JSONL file
+file_paths = ["sample_text.jsonl", "writing_samples.jsonl"]
+output_file = "split_samples.jsonl"
+raw_dataset = load_dataset("json", data_files=file_paths)
+
+# Process each story in the dataset
+with open(output_file, "w", encoding="utf-8") as out_f:
+    for item in raw_dataset["train"]:  # Hugging Face datasets use splits like "train"
+        story_text = item["text"]  # Access the text field
+        sentences = split_story_into_sentences(story_text)  # Split the text into sentences
+        for sentence in sentences:
+            out_f.write(json.dumps({"text": sentence}) + "\n")  # Save each sentence as a new JSON object
+
+# Tokenize the dataset with truncation and padding
+def tokenize_function(examples):
+    return tokenizer(
+        examples["text"], 
+        truncation=True,  # Truncate sequences exceeding the max length
+        padding="max_length",  # Pad shorter sequences to the max length
+        max_length=1024  # Set the model's max context length
+    )
+
+processed_dataset = load_dataset("json", data_files=output_file)
+tokenized_dataset = processed_dataset.map(tokenize_function, batched=True)
 
 # Data collator to handle batching for more efficient parallel processing
 data_collator = DataCollatorForLanguageModeling(
@@ -39,6 +64,9 @@ def train_model():
     print("Loading GPT-2 model...")
     model = GPT2LMHeadModel.from_pretrained(MODEL_NAME)
 
+    # Resize token embeddings to match tokenizer's vocabulary size
+    model.resize_token_embeddings(len(tokenizer))
+    
     # Training arguments
     training_args = TrainingArguments(
         output_dir=OUTPUT_DIR,
