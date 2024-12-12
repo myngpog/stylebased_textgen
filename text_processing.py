@@ -12,7 +12,7 @@ from datasets import load_dataset
 
 nltk.download("punkt_tab")
 
-MODEL_NAME = "EleutherAI/gpt-neo-2.7B"
+MODEL_NAME = "EleutherAI/gpt-neo-125m"
 OUTPUT_DIR = "model_output_neo"
 
 # Loads pre-trained model of GPT2
@@ -71,7 +71,7 @@ def train_model():
     training_args = TrainingArguments(
         output_dir=OUTPUT_DIR,
         overwrite_output_dir=True,
-        num_train_epochs=1,
+        num_train_epochs=2,
         per_device_train_batch_size=8,
         save_steps=500,
         save_total_limit=2,
