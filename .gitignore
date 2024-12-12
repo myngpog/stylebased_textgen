@@ -1,7 +1,12 @@
 # training data
 # writing_samples.jsonl 
-# gpt2 model
+
+# gpt2 model with epoch=3
 model_output
-split_samples.jsonl
+
+# gpt2 model with epoch=2
+
 # gpt-neo-2.7b model
 model_output_neo
+
+split_samples.jsonl

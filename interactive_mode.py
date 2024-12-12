@@ -7,8 +7,8 @@ MODEL_DIR = "model_output"
 
 # Load the fine-tuned model and tokenizer
 print("Loading fine-tuned model and tokenizer...")
-tokenizer = GPT2Tokenizer.from_pretrained(MODEL_DIR_NEO)
-model = GPTNeoForCausalLM.from_pretrained(MODEL_DIR_NEO)
+tokenizer = GPT2Tokenizer.from_pretrained(MODEL_DIR)
+model = GPTNeoForCausalLM.from_pretrained(MODEL_DIR)
 
 def generate_text(prompt, word_count):
     """

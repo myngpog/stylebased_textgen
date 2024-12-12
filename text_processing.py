@@ -3,6 +3,7 @@ import torch, json
 import nltk
 from transformers import (
     GPT2Tokenizer,
+    GPT2LMHeadModel,
     GPTNeoForCausalLM,
     Trainer,
     TrainingArguments,
@@ -12,11 +13,12 @@ from datasets import load_dataset
 
 nltk.download("punkt_tab")
 
-MODEL_NAME = "EleutherAI/gpt-neo-125m"
-OUTPUT_DIR = "model_output_neo"
+MODEL_NAME_NEO = "EleutherAI/gpt-neo-125m"
+MODEL_NAME_GPT2 = "gpt2"
+OUTPUT_DIR = "model_output_GPT2"
 
 # Loads pre-trained model of GPT2
-tokenizer = GPT2Tokenizer.from_pretrained(MODEL_NAME)
+tokenizer = GPT2Tokenizer.from_pretrained(MODEL_NAME_GPT2)
 
 if tokenizer.pad_token is None:
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
@@ -47,7 +49,7 @@ def tokenize_function(examples):
         examples["text"], 
         truncation=True,  # Truncate sequences exceeding the max length
         padding="max_length",  # Pad shorter sequences to the max length
-        max_length=2048  # Set the model's max context length
+        max_length=1024  # Set the model's max context length
     )
 
 processed_dataset = load_dataset("json", data_files=output_file)
@@ -61,8 +63,8 @@ data_collator = DataCollatorForLanguageModeling(
 
 # Training function
 def train_model():
-    print("Loading GPT-Neo model...")
-    model = GPTNeoForCausalLM.from_pretrained(MODEL_NAME)
+    print("Loading GPT-2 model...")
+    model = GPT2LMHeadModel.from_pretrained(MODEL_NAME_GPT2)
 
     # Resize token embeddings to match tokenizer's vocabulary size
     model.resize_token_embeddings(len(tokenizer))
