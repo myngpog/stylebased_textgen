@@ -4,11 +4,12 @@ from transformers import GPT2Tokenizer, GPT2LMHeadModel, GPTNeoForCausalLM
 # SETTINGS
 MODEL_DIR_NEO = "model_output_neo"  # Path to fine-tuned/trained model
 MODEL_DIR = "model_output"
+MODEL_DIR_GPT2 = "model_output_gpt2"
 
 # Load the fine-tuned model and tokenizer
 print("Loading fine-tuned model and tokenizer...")
-tokenizer = GPT2Tokenizer.from_pretrained(MODEL_DIR)
-model = GPTNeoForCausalLM.from_pretrained(MODEL_DIR)
+tokenizer = GPT2Tokenizer.from_pretrained(MODEL_DIR_GPT2)
+model = GPT2LMHeadModel.from_pretrained(MODEL_DIR_GPT2)
 
 def generate_text(prompt, word_count):
     """

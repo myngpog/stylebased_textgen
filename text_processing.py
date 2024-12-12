@@ -74,7 +74,7 @@ def train_model():
         output_dir=OUTPUT_DIR,
         overwrite_output_dir=True,
         num_train_epochs=2,
-        per_device_train_batch_size=8,
+        per_device_train_batch_size=4,
         save_steps=500,
         save_total_limit=2,
         logging_dir="./logs",
