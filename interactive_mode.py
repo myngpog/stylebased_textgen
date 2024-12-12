@@ -60,21 +60,21 @@ def interactive_prompt():
             prompt = f"{scenario}"
 
             # ask for word count
-            word_count_input = input("Enter the desired word count (default is 50): \n")
+            word_count_input = input("Enter the desired word count (default is 200): \n")
             try:
                 if word_count_input:
                     word_count = int(word_count_input)
                     if word_count <= 0:
-                        print("Word count must be a positive integer. Using default of 50.")
-                        word_count = 50
-                    if word_count > 2000:
-                        print("Word count is too large! Using default of 50.")
-                        word_count = 50
+                        print("Word count must be a positive integer. Using default of 200.")
+                        word_count = 200
+                    if word_count > 700:
+                        print("Word count is too large! Using default of 200.")
+                        word_count = 200
                 else:
-                    word_count = 50
+                    word_count = 200
             except ValueError:
-                print("Invalid word count entered. Using default of 50.")
-                word_count = 50
+                print("Invalid word count entered. Using default of 200.")
+                word_count = 200
 
             # generate the response within the specified word count
             generated_text = generate_text(prompt, word_count=word_count)
