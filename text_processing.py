@@ -82,6 +82,7 @@ def train_model():
         learning_rate=2e-5,
         weight_decay=0.01,
         warmup_steps=100,
+        max_grad_norm=1.0, # to stabilize gradiant oscillation
         report_to="none",
         fp16=torch.cuda.is_available()
     )
