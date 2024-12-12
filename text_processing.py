@@ -1,9 +1,9 @@
-# modified code from ChatGPT (4o, paid version, November 26, 2024 and December 9th 2024)
+# modified code from ChatGPT (4o, paid version, November 26, 2024, December 9th 2024, and December 11th 2024)
 import torch, json
 import nltk
 from transformers import (
     GPT2Tokenizer,
-    GPT2LMHeadModel,
+    GPTNeoForCausalLM,
     Trainer,
     TrainingArguments,
     DataCollatorForLanguageModeling
@@ -12,8 +12,8 @@ from datasets import load_dataset
 
 nltk.download("punkt_tab")
 
-MODEL_NAME = "gpt2"
-OUTPUT_DIR = "model_output"
+MODEL_NAME = "EleutherAI/gpt-neo-2.7B"
+OUTPUT_DIR = "model_output_neo"
 
 # Loads pre-trained model of GPT2
 tokenizer = GPT2Tokenizer.from_pretrained(MODEL_NAME)
@@ -36,7 +36,7 @@ raw_dataset = load_dataset("json", data_files=file_paths)
 # Process each story in the dataset
 with open(output_file, "w", encoding="utf-8") as out_f:
     for item in raw_dataset["train"]:  # Hugging Face datasets use splits like "train"
-        story_text = item["text"]  # Access the text field
+        story_text = item["text"] 
         sentences = split_story_into_sentences(story_text)  # Split the text into sentences
         for sentence in sentences:
             out_f.write(json.dumps({"text": sentence}) + "\n")  # Save each sentence as a new JSON object
@@ -47,7 +47,7 @@ def tokenize_function(examples):
         examples["text"], 
         truncation=True,  # Truncate sequences exceeding the max length
         padding="max_length",  # Pad shorter sequences to the max length
-        max_length=1024  # Set the model's max context length
+        max_length=2048  # Set the model's max context length
     )
 
 processed_dataset = load_dataset("json", data_files=output_file)
@@ -61,8 +61,8 @@ data_collator = DataCollatorForLanguageModeling(
 
 # Training function
 def train_model():
-    print("Loading GPT-2 model...")
-    model = GPT2LMHeadModel.from_pretrained(MODEL_NAME)
+    print("Loading GPT-Neo model...")
+    model = GPTNeoForCausalLM.from_pretrained(MODEL_NAME)
 
     # Resize token embeddings to match tokenizer's vocabulary size
     model.resize_token_embeddings(len(tokenizer))
@@ -71,7 +71,7 @@ def train_model():
     training_args = TrainingArguments(
         output_dir=OUTPUT_DIR,
         overwrite_output_dir=True,
-        num_train_epochs=3,
+        num_train_epochs=1,
         per_device_train_batch_size=8,
         save_steps=500,
         save_total_limit=2,

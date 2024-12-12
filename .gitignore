@@ -1,5 +1,7 @@
-# my writing samples
-writing_samples.jsonl 
-# the fine training output from running text_processing.py
+# training data
+# writing_samples.jsonl 
+# gpt2 model
 model_output
 split_samples.jsonl
+# gpt-neo-2.7b model
+model_output_neo

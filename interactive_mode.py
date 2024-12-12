@@ -1,19 +1,19 @@
 # modified code from ChatGPT (4o, paid version, November 26, 2024)
-from transformers import GPT2Tokenizer, GPT2LMHeadModel
+from transformers import GPT2Tokenizer, GPT2LMHeadModel, GPTNeoForCausalLM
 
 # SETTINGS
-MODEL_DIR = "model_output"  # Path to our fine-tuned/trained model
+MODEL_DIR_NEO = "model_output_neo"  # Path to fine-tuned/trained model
+MODEL_DIR = "model_output"
 
 # Load the fine-tuned model and tokenizer
 print("Loading fine-tuned model and tokenizer...")
-tokenizer = GPT2Tokenizer.from_pretrained(MODEL_DIR)
-model = GPT2LMHeadModel.from_pretrained(MODEL_DIR)
+tokenizer = GPT2Tokenizer.from_pretrained(MODEL_DIR_NEO)
+model = GPTNeoForCausalLM.from_pretrained(MODEL_DIR_NEO)
 
 def generate_text(prompt, word_count):
     """
-    Generates text based on the provided prompt and desired word count.
+    Generates text based on the first sentence and desired word count.
     """
-    # Tokenize the prompt with padding and truncation
     inputs = tokenizer(
         prompt, 
         return_tensors="pt", 
@@ -27,7 +27,7 @@ def generate_text(prompt, word_count):
     outputs = model.generate(
         input_ids=input_ids,
         attention_mask=attention_mask,
-        max_length=word_count,  # Assume word_count translates roughly to tokens
+        max_length=word_count*1.5,  # 1 word ~ 1.5 tokens
         temperature=0.7,
         top_k=50,
         top_p=0.95,
@@ -41,22 +41,22 @@ def generate_text(prompt, word_count):
 
 def interactive_prompt():
     """
-    This function sets up the interactive terminal.
+    This function sets up the interactive terminal for the user to interact with.
     """
-    print("Enter the narrative prompt (type 'x' to quit).")
+    print("Type the first sentence of your story and let AI continue the rest (type 'x' to quit).")
     while True:
         try:
             # ask for writing prompt
-            scenario = input("\nEnter a scenario: ")
+            scenario = input("\nType the first sentence of your story: ")
             if not scenario:
-                print("Scenario cannot be empty. Please try again.")
+                print("Input cannot be empty. Please try again.")
                 continue
             if scenario.lower() == "x":
                 print("Exiting interactive mode.")
                 break
                 
             # add instructions for the model to interpret
-            prompt = f"Write a cohesive story about the following scenario: {scenario}"
+            prompt = f"{scenario}"
 
             # ask for word count
             word_count_input = input("Enter the desired word count (default is 50): \n")
