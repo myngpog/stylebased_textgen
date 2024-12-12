@@ -1,7 +1,8 @@
 # training data
-# writing_samples.jsonl 
+writing_samples.jsonl 
 
 # gpt2 model with epoch=3
+model_output_E3
 model_output
 
 # gpt2 model with epoch=2

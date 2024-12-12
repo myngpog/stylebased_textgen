@@ -28,7 +28,7 @@ def generate_text(prompt, word_count):
     outputs = model.generate(
         input_ids=input_ids,
         attention_mask=attention_mask,
-        max_length=word_count*1.5,  # 1 word ~ 1.5 tokens
+        max_length=word_count/0.75,  # 1 token ~ 0.75 words
         temperature=0.7,
         top_k=50,
         top_p=0.95,
