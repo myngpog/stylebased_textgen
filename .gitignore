@@ -4,6 +4,7 @@ writing_samples.jsonl
 # gpt2 model with epoch=3
 model_output_E3
 model_output
+model_output_GPT2
 
 # gpt2 model with epoch=2
 

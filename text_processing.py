@@ -73,15 +73,15 @@ def train_model():
     training_args = TrainingArguments(
         output_dir=OUTPUT_DIR,
         overwrite_output_dir=True,
-        num_train_epochs=2,
+        num_train_epochs=5,
         per_device_train_batch_size=4,
-        save_steps=500,
+        save_steps=100,
         save_total_limit=2,
         logging_dir="./logs",
         logging_steps=100,
-        learning_rate=5e-5,
+        learning_rate=2e-5,
         weight_decay=0.01,
-        warmup_steps=500,
+        warmup_steps=100,
         report_to="none",
         fp16=torch.cuda.is_available()
     )
