@@ -1,14 +1,11 @@
 # training data
 writing_samples.jsonl 
 
-# gpt2 model with epoch=3
+# gpt2 model with epoch=3, scrapped
 model_output_E3
-model_output
-model_output_GPT2
-
-# gpt2 model with epoch=2
-
-# gpt-neo-2.7b model
-model_output_neo
 
 split_samples.jsonl
+
+# other files
+clear_cache.py
+gpu_runtests.py
