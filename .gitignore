@@ -4,8 +4,7 @@ writing_samples.jsonl
 # gpt2 model with epoch=3, scrapped!
 model_output_E3
 
-split_samples.jsonl
-
 # other files
 clear_cache.py
 gpu_runtests.py
+split_samples.jsonl
