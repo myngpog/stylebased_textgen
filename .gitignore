@@ -6,5 +6,5 @@ model_output_E3
 
 # other files
 clear_cache.py
-gpu_runtests.py
+gpu_runtest.py
 split_samples.jsonl
